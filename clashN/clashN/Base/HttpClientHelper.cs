@@ -63,16 +63,12 @@ namespace clashN.Base
             {
                 return null;
             }
-            try
+            HttpResponseMessage response = await client.GetAsync(url, token);
+            if (!response.IsSuccessStatusCode)
             {
-                HttpResponseMessage response = await client.GetAsync(url, token);
-                return await response.Content.ReadAsStringAsync();
+                throw new Exception(string.Format("The request returned with HTTP status code {0}", response.StatusCode));
             }
-            catch (Exception ex)
-            {
-                Utils.SaveLog("GetAsync", ex);
-            }
-            return null;
+            return await response.Content.ReadAsStringAsync();
         }
 
 
@@ -83,7 +79,17 @@ namespace clashN.Base
             var byteContent = new ByteArrayContent(buffer);
             byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-            var result = await httpClient.PutAsync(url, byteContent);
+            await httpClient.PutAsync(url, byteContent);
+        }
+
+        public async Task PatchAsync(string url, Dictionary<string, string> headers)
+        {
+            var myContent = Utils.ToJson(headers);
+            var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
+            var byteContent = new ByteArrayContent(buffer);
+            byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            await httpClient.PatchAsync(url, byteContent);
         }
 
         public async Task DownloadFileAsync(HttpClient client, string url, string fileName, IProgress<double> progress, CancellationToken token)

@@ -98,6 +98,7 @@
   <ItemGroup>
     <Content Include="clashN.ico" />
     <Content Include="Resources\help.png" />
+    <EmbeddedResource Include="Sample\SampleMixin.yaml" />
     <EmbeddedResource Include="Sample\SampleTun.yaml" />
   </ItemGroup>
   <ItemGroup>
@@ -119,6 +120,7 @@
   </ItemGroup>
   <PropertyGroup />
   <ItemGroup>
+    <None Remove="Sample\SampleMixin.yaml" />
     <None Remove="Sample\SampleTun.yaml" />
   </ItemGroup>
   <ItemGroup>

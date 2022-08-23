@@ -72,25 +72,19 @@
     <value>NoControl</value>
   </data>
   <data name="tsbProxiesReload.Size" type="System.Drawing.Size, System.Drawing">
-    <value>181, 22</value>
+    <value>202, 22</value>
   </data>
   <data name="tsbProxiesReload.Text" xml:space="preserve">
     <value>Proxies reload</value>
   </data>
   <data name="tsbProxiesSpeedtest.Size" type="System.Drawing.Size, System.Drawing">
-    <value>181, 22</value>
+    <value>202, 22</value>
   </data>
   <data name="tsbProxiesSpeedtest.Text" xml:space="preserve">
-    <value>Delay test</value>
-  </data>
-  <data name="tsbProxiesSelectActivity.Size" type="System.Drawing.Size, System.Drawing">
-    <value>181, 22</value>
-  </data>
-  <data name="tsbProxiesSelectActivity.Text" xml:space="preserve">
-    <value>Select active node</value>
+    <value>All Node Latency Test</value>
   </data>
   <data name="cmsProxies.Size" type="System.Drawing.Size, System.Drawing">
-    <value>182, 70</value>
+    <value>203, 48</value>
   </data>
   <data name="&gt;&gt;cmsProxies.Name" xml:space="preserve">
     <value>cmsProxies</value>
@@ -151,6 +145,33 @@
   </data>
   <data name="&gt;&gt;splitContainer1.Panel1.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <metadata name="cmsDetails.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>189, 17</value>
+  </metadata>
+  <data name="cmsDetails.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="tsbProxiesSpeedtestPart.Size" type="System.Drawing.Size, System.Drawing">
+    <value>223, 22</value>
+  </data>
+  <data name="tsbProxiesSpeedtestPart.Text" xml:space="preserve">
+    <value>Part Node Latency Test</value>
+  </data>
+  <data name="tsbProxiesSelectActivity.Size" type="System.Drawing.Size, System.Drawing">
+    <value>223, 22</value>
+  </data>
+  <data name="tsbProxiesSelectActivity.Text" xml:space="preserve">
+    <value>Select active node (Enter)</value>
+  </data>
+  <data name="cmsDetails.Size" type="System.Drawing.Size, System.Drawing">
+    <value>224, 70</value>
+  </data>
+  <data name="&gt;&gt;cmsDetails.Name" xml:space="preserve">
+    <value>cmsDetails</value>
+  </data>
+  <data name="&gt;&gt;cmsDetails.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="lvDetail.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -224,7 +245,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;splitContainer1.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -254,6 +275,12 @@
     <value>tsbProxiesSelectActivity</value>
   </data>
   <data name="&gt;&gt;tsbProxiesSelectActivity.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tsbProxiesSpeedtestPart.Name" xml:space="preserve">
+    <value>tsbProxiesSpeedtestPart</value>
+  </data>
+  <data name="&gt;&gt;tsbProxiesSpeedtestPart.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">

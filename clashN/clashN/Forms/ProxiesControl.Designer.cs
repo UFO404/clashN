@@ -35,13 +35,16 @@
             this.cmsProxies = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsbProxiesReload = new System.Windows.Forms.ToolStripMenuItem();
             this.tsbProxiesSpeedtest = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsbProxiesSelectActivity = new System.Windows.Forms.ToolStripMenuItem();
             this.lvDetail = new clashN.Base.ListViewFlickerFree();
+            this.cmsDetails = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsbProxiesSelectActivity = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsbProxiesSpeedtestPart = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.cmsProxies.SuspendLayout();
+            this.cmsDetails.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -79,8 +82,7 @@
             resources.ApplyResources(this.cmsProxies, "cmsProxies");
             this.cmsProxies.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbProxiesReload,
-            this.tsbProxiesSpeedtest,
-            this.tsbProxiesSelectActivity});
+            this.tsbProxiesSpeedtest});
             this.cmsProxies.Name = "contextMenuStrip1";
             this.cmsProxies.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
             this.cmsProxies.ShowCheckMargin = true;
@@ -98,15 +100,9 @@
             resources.ApplyResources(this.tsbProxiesSpeedtest, "tsbProxiesSpeedtest");
             this.tsbProxiesSpeedtest.Click += new System.EventHandler(this.tsbProxiesSpeedtest_Click);
             // 
-            // tsbProxiesSelectActivity
-            // 
-            this.tsbProxiesSelectActivity.Name = "tsbProxiesSelectActivity";
-            resources.ApplyResources(this.tsbProxiesSelectActivity, "tsbProxiesSelectActivity");
-            this.tsbProxiesSelectActivity.Click += new System.EventHandler(this.tsbProxiesSelectActivity_Click);
-            // 
             // lvDetail
             // 
-            this.lvDetail.ContextMenuStrip = this.cmsProxies;
+            this.lvDetail.ContextMenuStrip = this.cmsDetails;
             resources.ApplyResources(this.lvDetail, "lvDetail");
             this.lvDetail.FullRowSelect = true;
             this.lvDetail.GridLines = true;
@@ -118,8 +114,32 @@
             this.lvDetail.UseCompatibleStateImageBehavior = false;
             this.lvDetail.View = System.Windows.Forms.View.Details;
             this.lvDetail.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvDetail_ColumnClick);
-            this.lvDetail.SelectedIndexChanged += new System.EventHandler(this.lvDetail_SelectedIndexChanged);
+            this.lvDetail.DoubleClick += new System.EventHandler(this.lvDetail_DoubleClick);
             this.lvDetail.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvDetail_KeyDown);
+            // 
+            // cmsDetails
+            // 
+            this.cmsDetails.ImageScalingSize = new System.Drawing.Size(20, 20);
+            resources.ApplyResources(this.cmsDetails, "cmsDetails");
+            this.cmsDetails.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsbProxiesSpeedtestPart,
+            this.tsbProxiesSelectActivity});
+            this.cmsDetails.Name = "contextMenuStrip1";
+            this.cmsDetails.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.cmsDetails.ShowCheckMargin = true;
+            this.cmsDetails.ShowImageMargin = false;
+            // 
+            // tsbProxiesSelectActivity
+            // 
+            this.tsbProxiesSelectActivity.Name = "tsbProxiesSelectActivity";
+            resources.ApplyResources(this.tsbProxiesSelectActivity, "tsbProxiesSelectActivity");
+            this.tsbProxiesSelectActivity.Click += new System.EventHandler(this.tsbProxiesSelectActivity_Click);
+            // 
+            // tsbProxiesSpeedtestPart
+            // 
+            this.tsbProxiesSpeedtestPart.Name = "tsbProxiesSpeedtestPart";
+            resources.ApplyResources(this.tsbProxiesSpeedtestPart, "tsbProxiesSpeedtestPart");
+            this.tsbProxiesSpeedtestPart.Click += new System.EventHandler(this.tsbProxiesSpeedtestPart_Click);
             // 
             // ProxiesControl
             // 
@@ -133,6 +153,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.cmsProxies.ResumeLayout(false);
+            this.cmsDetails.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -145,6 +166,8 @@
         private System.Windows.Forms.ContextMenuStrip cmsProxies;
         private System.Windows.Forms.ToolStripMenuItem tsbProxiesReload;
         private System.Windows.Forms.ToolStripMenuItem tsbProxiesSpeedtest;
+        private System.Windows.Forms.ContextMenuStrip cmsDetails;
         private System.Windows.Forms.ToolStripMenuItem tsbProxiesSelectActivity;
+        private System.Windows.Forms.ToolStripMenuItem tsbProxiesSpeedtestPart;
     }
 }

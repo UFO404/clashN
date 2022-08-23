@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
 using clashN.Base;
 using clashN.Handler;
@@ -44,6 +45,8 @@ namespace clashN.Forms
             chkEnableIpv6.Checked = config.enableIpv6;
 
             txtsystemProxyExceptions.Text = config.systemProxyExceptions;
+
+            chkEnableMixinContent.Checked = config.enableMixinContent;
         }
 
         /// <summary>
@@ -59,6 +62,7 @@ namespace clashN.Forms
             chkIgnoreGeoUpdateCore.Checked = config.ignoreGeoUpdateCore;
             txtautoUpdateInterval.Text = config.autoUpdateInterval.ToString();
             txtautoUpdateSubInterval.Text = config.autoUpdateSubInterval.ToString();
+            txtautoDelayTestInterval.Text = config.autoDelayTestInterval.ToString();
             chkEnableSecurityProtocolTls13.Checked = config.enableSecurityProtocolTls13;
 
             cmbSubConvertUrl.Text = config.constItem.subConvertUrl;
@@ -134,6 +138,8 @@ namespace clashN.Forms
 
             config.systemProxyExceptions = txtsystemProxyExceptions.Text.TrimEx();
 
+            config.enableMixinContent = chkEnableMixinContent.Checked;
+
             return 0;
         }
 
@@ -153,6 +159,7 @@ namespace clashN.Forms
             config.ignoreGeoUpdateCore = chkIgnoreGeoUpdateCore.Checked;
             config.autoUpdateInterval = Utils.ToInt(txtautoUpdateInterval.Text);
             config.autoUpdateSubInterval = Utils.ToInt(txtautoUpdateSubInterval.Text);
+            config.autoDelayTestInterval = Utils.ToInt(txtautoDelayTestInterval.Text);
             config.enableSecurityProtocolTls13 = chkEnableSecurityProtocolTls13.Checked;
 
             config.constItem.subConvertUrl = cmbSubConvertUrl.Text.TrimEx();
@@ -188,6 +195,28 @@ namespace clashN.Forms
             Utils.RegWriteValue(Global.MyRegPath, Global.MyRegKeyFont, null);
             UI.Show(ResUI.OperationSuccess);
 
+        }
+
+        private void btnEditMixinContent_Click(object sender, EventArgs e)
+        {
+            var address = Utils.GetPath(Global.mixinConfigFileName);
+            if (!File.Exists(address))
+            {
+                string contents = Utils.GetEmbedText(Global.SampleMixin);
+                if (!Utils.IsNullOrEmpty(contents))
+                {
+                    File.WriteAllText(address, contents);
+                }
+            }
+
+            if (File.Exists(address))
+            {
+                Utils.ProcessStart(address);
+            }
+            else
+            {
+                UI.Show(ResUI.FailedReadConfiguration);
+            }
         }
     }
 }

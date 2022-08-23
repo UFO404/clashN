@@ -128,26 +128,26 @@ namespace clashN.Handler
                     Thread.Sleep(60000);
                 }
 
-                if (config.autoUpdateInterval > 0)
-                {
-                    if ((dtNow - autoUpdateGeoTime).Hours % config.autoUpdateInterval == 0)
-                    {
-                        updateHandle.UpdateGeoFile("geosite", config, (bool success, string msg) =>
-                        {
-                            update(false, msg);
-                            if (success)
-                                Utils.SaveLog("geosite" + msg);
-                        });
+                //if (config.autoUpdateInterval > 0)
+                //{
+                //    if ((dtNow - autoUpdateGeoTime).Hours % config.autoUpdateInterval == 0)
+                //    {
+                //        updateHandle.UpdateGeoFile("geosite", config, (bool success, string msg) =>
+                //        {
+                //            update(false, msg);
+                //            if (success)
+                //                Utils.SaveLog("geosite" + msg);
+                //        });
 
-                        updateHandle.UpdateGeoFile("geoip", config, (bool success, string msg) =>
-                        {
-                            update(false, msg);
-                            if (success)
-                                Utils.SaveLog("geoip" + msg);
-                        });
-                        autoUpdateGeoTime = dtNow;
-                    }
-                }
+                //        updateHandle.UpdateGeoFile("geoip", config, (bool success, string msg) =>
+                //        {
+                //            update(false, msg);
+                //            if (success)
+                //                Utils.SaveLog("geoip" + msg);
+                //        });
+                //        autoUpdateGeoTime = dtNow;
+                //    }
+                //}
 
                 Thread.Sleep(1000 * 3600);
             }
@@ -203,21 +203,38 @@ namespace clashN.Handler
 
         private async Task GetClashProxiesAsync(Config config, Action<ClashProxies, ClashProviders> update)
         {
-            var url = $"{Global.httpProtocol}{Global.Loopback}:{config.APIPort}/proxies";
-            var result = await HttpClientHelper.GetInstance().GetAsync(url);
-            var clashProxies = Utils.FromJson<ClashProxies>(result);
+            for (var i = 0; i < 5; i++)
+            {
+                var url = $"{Global.httpProtocol}{Global.Loopback}:{config.APIPort}/proxies";
+                var result = await HttpClientHelper.GetInstance().GetAsync(url);
+                var clashProxies = Utils.FromJson<ClashProxies>(result);
 
-            var url2 = $"{Global.httpProtocol}{Global.Loopback}:{config.APIPort}/providers/proxies";
-            var result2 = await HttpClientHelper.GetInstance().GetAsync(url2);
-            var clashProviders = Utils.FromJson<ClashProviders>(result2);
+                var url2 = $"{Global.httpProtocol}{Global.Loopback}:{config.APIPort}/providers/proxies";
+                var result2 = await HttpClientHelper.GetInstance().GetAsync(url2);
+                var clashProviders = Utils.FromJson<ClashProviders>(result2);
 
-            update(clashProxies, clashProviders);
+                if (clashProxies != null || clashProviders != null)
+                {
+                    update(clashProxies, clashProviders);
+                    return;
+                }
+                Thread.Sleep(5000);
+            }
+            update(null, null);
         }
 
         public void ClashProxiesDelayTest(Action<string> update)
         {
             Task.Run(() =>
             {
+                for (int i = 0; i < 5; i++)
+                {
+                    if (LazyConfig.Instance.GetProxies() == null)
+                    {
+                        Thread.Sleep(5000);
+                        continue;
+                    }
+                }
                 var proxies = LazyConfig.Instance.GetProxies();
                 if (proxies == null)
                 {
@@ -247,6 +264,45 @@ namespace clashN.Handler
             });
         }
 
+        public void ClashProxiesDelayTestPart(List<ProxiesItem> lstProxy, Action<ProxiesItem, string> update)
+        {
+            Task.Run(() =>
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    if (LazyConfig.Instance.GetProxies() == null)
+                    {
+                        Thread.Sleep(5000);
+                        continue;
+                    }
+                }
+                var proxies = LazyConfig.Instance.GetProxies();
+                if (proxies == null || lstProxy == null)
+                {
+                    return;
+                }
+                var urlBase = $"{Global.httpProtocol}{Global.Loopback}:{LazyConfig.Instance.GetConfig().APIPort}/proxies";
+                urlBase += @"/{0}/delay?timeout=10000&url=" + LazyConfig.Instance.GetConfig().constItem.speedPingTestUrl;
+
+                List<Task> tasks = new List<Task>();
+                foreach (var it in lstProxy)
+                {
+                    if (Global.notAllowTestType.Contains(it.type.ToLower()))
+                    {
+                        continue;
+                    }
+                    var name = it.name;
+                    var url = string.Format(urlBase, name);
+                    tasks.Add(Task.Run(async () =>
+                    {
+                        var result = await HttpClientHelper.GetInstance().GetAsync(url);
+                        update(it, result);
+                    }));
+                }
+                Task.WaitAll(tasks.ToArray());
+            });
+        }
+
         public void InitRegister(Config config)
         {
             Task.Run(() =>
@@ -258,5 +314,58 @@ namespace clashN.Handler
 
             });
         }
+
+        public List<ProxiesItem> GetClashProxyGroups()
+        {
+            try
+            {
+                var fileContent = LazyConfig.Instance.ProfileContent;
+                if (!fileContent.ContainsKey("proxy-groups"))
+                {
+                    return null;
+                }
+                return Utils.FromJson<List<ProxiesItem>>(Utils.ToJson(fileContent["proxy-groups"]));
+            }
+            catch (Exception ex)
+            {
+                Utils.SaveLog("GetClashProxyGroups", ex);
+                return null;
+            }
+        }
+
+        public async void ClashSetActiveProxy(string name, string nameNode)
+        {
+            var url = $"{Global.httpProtocol}{Global.Loopback}:{LazyConfig.Instance.GetConfig().APIPort}/proxies/{name}";
+            Dictionary<string, string> headers = new Dictionary<string, string>();
+            headers.Add("name", nameNode);
+            await HttpClientHelper.GetInstance().PutAsync(url, headers);
+
+        }
+
+        public void ClashConfigUpdate(Dictionary<string, string> headers)
+        {
+            Task.Run(async () =>
+            {
+                var proxies = LazyConfig.Instance.GetProxies();
+                if (proxies == null)
+                {
+                    return;
+                }
+
+                var urlBase = $"{Global.httpProtocol}{Global.Loopback}:{LazyConfig.Instance.GetConfig().APIPort}/configs";
+
+                await HttpClientHelper.GetInstance().PatchAsync(urlBase, headers);
+            });
+        }
+
+        public async void ClashConfigReload( string filePath)
+        {
+            var url = $"{Global.httpProtocol}{Global.Loopback}:{LazyConfig.Instance.GetConfig().APIPort}/configs";
+            Dictionary<string, string> headers = new Dictionary<string, string>();
+            headers.Add("path", filePath);
+            await HttpClientHelper.GetInstance().PutAsync(url, headers);
+
+        }
+
     }
 }

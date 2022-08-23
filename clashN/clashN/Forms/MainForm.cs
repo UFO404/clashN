@@ -100,7 +100,7 @@ namespace clashN.Forms
 
             _ = LoadCore();
 
-            proxiesControl.Init(config);
+            proxiesControl.Init(config, UpdateTaskHandler);
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -216,7 +216,10 @@ namespace clashN.Forms
                 .ToList();
 
             ConfigHandler.SetDefaultProfile(config, lstProfile);
-            RefreshProfilesView();
+            BeginInvoke(new Action(() =>
+            {
+                RefreshProfilesView();
+            }));
             RefreshProfilesMenu();
         }
 
@@ -332,7 +335,7 @@ namespace clashN.Forms
             if (index >= 0 && index < lvProfiles.Items.Count && lvProfiles.Items.Count > 0)
             {
                 lvProfiles.Items[index].Selected = true;
-                lvProfiles.EnsureVisible(index); // workaround
+                lvProfiles.SetScrollPosition(index); // workaround
             }
         }
 
@@ -456,6 +459,7 @@ namespace clashN.Forms
 
             SwitchUI(true);
             proxiesControl.ProxiesReload();
+            proxiesControl.ProxiesDelayTest();
 
         }
 
@@ -847,7 +851,7 @@ namespace clashN.Forms
             if (index >= 0 && index < lvProfiles.Items.Count && lvProfiles.Items.Count > 0)
             {
                 lvProfiles.Items[index].Selected = true;
-                lvProfiles.EnsureVisible(index); // workaround
+                lvProfiles.SetScrollPosition(index); // workaround
             }
 
             SetVisibleCore(true);
@@ -1193,16 +1197,16 @@ namespace clashN.Forms
             }
             mainMsgControl.SetToolSslInfo("routing", mode.ToString());
 
-            if (config.ruleMode == mode)
-            {
-                return;
-            }
+            AppendText(false, $"{config.ruleMode.ToString()}->{mode.ToString()}");
             config.ruleMode = mode;
-
-            Global.reloadCore = true;
-            _ = LoadCore();
-
             ConfigHandler.SaveConfig(ref config, false);
+
+            if (mode != ERuleMode.Unchanged)
+            {
+                Dictionary<string, string> headers = new Dictionary<string, string>();
+                headers.Add("mode", config.ruleMode.ToString().ToLower());
+                MainFormHandler.Instance.ClashConfigUpdate(headers);
+            }
         }
 
         #endregion
@@ -1225,11 +1229,13 @@ namespace clashN.Forms
                     {
                         tsbCurrentProxies.Enabled = true;
                         tsbProfile.Enabled = false;
+                        proxiesControl.Focus();
                     }
                     else
                     {
                         tsbCurrentProxies.Enabled = false;
                         tsbProfile.Enabled = true;
+                        lvProfiles.Focus();
                     }
 
                     tsbReload.Enabled = true;
@@ -1251,12 +1257,8 @@ namespace clashN.Forms
 
         private void tsbProxiesSpeedtest_Click(object sender, EventArgs e)
         {
-            proxiesControl.ProxiesSpeedtest();
+            proxiesControl.ProxiesDelayTest();
         }
 
-        private void tsbProxiesSelectActivity_Click(object sender, EventArgs e)
-        {
-            proxiesControl.ProxiesSelectActivity();
-        }
     }
 }

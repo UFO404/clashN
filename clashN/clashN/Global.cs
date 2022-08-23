@@ -43,6 +43,11 @@ namespace clashN
         /// </summary>
         public const string coreConfigFileName = "config.yaml";
 
+        public const string mixinConfigFileName = "Mixin.yaml";
+
+        public const string SampleMixin = "clashN.Sample.SampleMixin.yaml";
+        public const string SampleTun = "clashN.Sample.SampleTun.yaml";
+
         public const string InboundSocks = "socks";
         public const string InboundHttp = "http";
         public const string Loopback = "127.0.0.1";
@@ -91,9 +96,9 @@ namespace clashN
 
         public static readonly List<string> coreTypes = new List<string> { "clash", "clash_meta" };
 
-        public static readonly List<string> allowSelectType = new List<string> { "selector", "urltest" };
+        public static readonly List<string> allowSelectType = new List<string> { "selector", "urltest", "loadbalance", "fallback" };
 
-        public static readonly List<string> notAllowTestType = new List<string> { "selector", "urltest", "direct", "reject", "compatible", "pass" };
+        public static readonly List<string> notAllowTestType = new List<string> { "selector", "urltest", "direct", "reject", "compatible", "pass", "loadbalance", "fallback" };
 
         public static readonly List<string> proxyVehicleType = new List<string> { "file", "http" };
 
